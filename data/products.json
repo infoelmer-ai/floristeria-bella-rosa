@@ -1,0 +1,74 @@
+[
+  {
+    "id": "rosas-rojas-docena",
+    "name": "Docena de Rosas Rojas",
+    "description": "Un clásico romántico. 12 rosas rojas frescas con follaje verde y papel decorativo.",
+    "price": 35.00,
+    "image": "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=600&q=80",
+    "category": "Rosas"
+  },
+  {
+    "id": "bouquet-mixto",
+    "name": "Bouquet Primaveral Mixto",
+    "description": "Arreglo colorido con girasoles, margaritas, lilies y flores de temporada.",
+    "price": 28.00,
+    "image": "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=600&q=80",
+    "category": "Bouquets"
+  },
+  {
+    "id": "girasoles-alegria",
+    "name": "Arreglo de Girasoles",
+    "description": "6 girasoles frescos que iluminan cualquier espacio. Simbolizan alegría y lealtad.",
+    "price": 22.00,
+    "image": "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=600&q=80",
+    "category": "Girasoles"
+  },
+  {
+    "id": "rosas-blancas",
+    "name": "Rosas Blancas Elegantes",
+    "description": "12 rosas blancas de elegancia pura. Perfectas para bodas y ocasiones especiales.",
+    "price": 38.00,
+    "image": "https://images.unsplash.com/photo-1606041011872-596597976b25?w=600&q=80",
+    "category": "Rosas"
+  },
+  {
+    "id": "orquidea-phalaenopsis",
+    "name": "Orquídea Phalaenopsis",
+    "description": "Planta de orquídea en maceta elegante. Dura semanas con cuidado mínimo.",
+    "price": 45.00,
+    "image": "https://images.unsplash.com/photo-1566408669374-5a6d5dca1ef5?w=600&q=80",
+    "category": "Plantas"
+  },
+  {
+    "id": "tulipanes-coloridos",
+    "name": "Tulipanes de Colores",
+    "description": "15 tulipanes en mezcla de colores vibrantes. La frescura de la primavera en tu hogar.",
+    "price": 30.00,
+    "image": "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=600&q=80",
+    "category": "Tulipanes"
+  },
+  {
+    "id": "arreglo-cumpleanos",
+    "name": "Arreglo de Cumpleaños",
+    "description": "Arreglo festivo con rosas, gerberas y globo. Ideal para celebrar ese día especial.",
+    "price": 40.00,
+    "image": "https://images.unsplash.com/photo-1487530811015-780ce0b0e8d5?w=600&q=80",
+    "category": "Ocasiones"
+  },
+  {
+    "id": "corona-funeral",
+    "name": "Corona de Condolencias",
+    "description": "Corona floral blanca y verde para expresar respeto y condolencias con dignidad.",
+    "price": 55.00,
+    "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=600&q=80",
+    "category": "Ocasiones"
+  },
+  {
+    "id": "caja-rosas-premium",
+    "name": "Caja de Rosas Premium",
+    "description": "24 rosas premium en caja de regalo. El regalo perfecto para una ocasión inolvidable.",
+    "price": 65.00,
+    "image": "https://images.unsplash.com/photo-1548586196-aa5803b77379?w=600&q=80",
+    "category": "Rosas"
+  }
+]
