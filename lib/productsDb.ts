@@ -13,7 +13,7 @@ export async function readProducts(): Promise<Product[]> {
     const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 1 })
     if (!blobs.length) return getInitialProducts()
 
-    const res = await fetch(blobs[0].downloadUrl, { cache: 'no-store' })
+    const res = await fetch(blobs[0].url, { cache: 'no-store' })
     if (!res.ok) return getInitialProducts()
     return await res.json()
   } catch {
