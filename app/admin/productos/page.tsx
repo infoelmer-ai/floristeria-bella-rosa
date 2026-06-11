@@ -63,10 +63,16 @@ export default function AdminProductos() {
 
   async function handleDelete(id: string, name: string) {
     if (!confirm(`¿Eliminar "${name}"?`)) return
-    await fetch(`/api/admin/products/${id}`, {
+    const res = await fetch(`/api/admin/products/${encodeURIComponent(id)}`, {
       method: 'DELETE',
       headers: { 'x-admin-token': token },
     })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      setMsg(`Error al eliminar: ${err.error || res.status}`)
+      setTimeout(() => setMsg(''), 4000)
+      return
+    }
     await loadProducts(token)
     setMsg('Producto eliminado')
     setTimeout(() => setMsg(''), 3000)
