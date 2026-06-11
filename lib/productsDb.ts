@@ -1,7 +1,7 @@
 import { put, list } from '@vercel/blob'
 import type { Product } from './products'
 
-const BLOB_PATHNAME = 'products.json'
+const BLOB_PATHNAME = 'products-v2.json'
 
 async function getInitialProducts(): Promise<Product[]> {
   const { default: data } = await import('../data/products.json')
