@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from 'next/cache'
 import { put, list } from '@vercel/blob'
 import type { Product } from './products'
 
@@ -9,11 +10,13 @@ async function getInitialProducts(): Promise<Product[]> {
 }
 
 export async function readProducts(): Promise<Product[]> {
+  noStore()
   try {
-    const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 1 })
+    const { blobs } = await list({ prefix: BLOB_PATHNAME })
     if (!blobs.length) return getInitialProducts()
 
-    const res = await fetch(blobs[0].url, { cache: 'no-store' })
+    const latest = blobs.sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime())[0]
+    const res = await fetch(latest.url, { cache: 'no-store' })
     if (!res.ok) return getInitialProducts()
     return await res.json()
   } catch {
