@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { list, getDownloadUrl } from '@vercel/blob'
+import { list, head } from '@vercel/blob'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,8 +13,8 @@ export async function GET(req: NextRequest) {
       all.blobs.map(async b => {
         let preview: any = null
         try {
-          const signed = await getDownloadUrl(b.url)
-          const r = await fetch(signed, { cache: 'no-store' })
+          const meta = await head(b.url)
+          const r = await fetch(meta.downloadUrl, { cache: 'no-store' })
           const text = await r.text()
           try {
             const parsed = JSON.parse(text)
