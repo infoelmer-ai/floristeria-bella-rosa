@@ -3,7 +3,7 @@ import CatalogClient from '@/components/CatalogClient'
 
 export const dynamic = 'force-dynamic'
 
-export default function Home() {
-  const products = readProducts()
+export default async function Home() {
+  const products = await readProducts()
   return <CatalogClient products={products} />
 }

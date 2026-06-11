@@ -3,19 +3,19 @@ import { readProducts, writeProducts, slugify } from '@/lib/productsDb'
 import type { Product } from '@/lib/products'
 
 function checkAuth(req: NextRequest) {
-  const token = req.headers.get('x-admin-token')
-  return token === process.env.ADMIN_PASSWORD
+  return req.headers.get('x-admin-token') === process.env.ADMIN_PASSWORD
 }
 
 export async function GET(req: NextRequest) {
   if (!checkAuth(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  return NextResponse.json(readProducts())
+  const products = await readProducts()
+  return NextResponse.json(products)
 }
 
 export async function POST(req: NextRequest) {
   if (!checkAuth(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   const body = await req.json()
-  const products = readProducts()
+  const products = await readProducts()
 
   const newProduct: Product = {
     id: slugify(body.name) + '-' + Date.now(),
@@ -27,6 +27,6 @@ export async function POST(req: NextRequest) {
   }
 
   products.push(newProduct)
-  writeProducts(products)
+  await writeProducts(products)
   return NextResponse.json(newProduct, { status: 201 })
 }

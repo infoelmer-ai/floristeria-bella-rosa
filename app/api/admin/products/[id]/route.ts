@@ -9,7 +9,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!checkAuth(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   const { id } = await params
   const body = await req.json()
-  const products = readProducts()
+  const products = await readProducts()
   const idx = products.findIndex(p => p.id === id)
   if (idx === -1) return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 })
 
@@ -21,18 +21,18 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     image: body.image,
     category: body.category,
   }
-  writeProducts(products)
+  await writeProducts(products)
   return NextResponse.json(products[idx])
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!checkAuth(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   const { id } = await params
-  const products = readProducts()
+  const products = await readProducts()
   const filtered = products.filter(p => p.id !== id)
   if (filtered.length === products.length) {
     return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 })
   }
-  writeProducts(filtered)
+  await writeProducts(filtered)
   return NextResponse.json({ ok: true })
 }

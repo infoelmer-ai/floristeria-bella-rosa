@@ -1,16 +1,34 @@
-import fs from 'fs'
-import path from 'path'
+import { put, head, getDownloadUrl } from '@vercel/blob'
 import type { Product } from './products'
 
-const DB_PATH = path.join(process.cwd(), 'data', 'products.json')
+const BLOB_KEY = 'products.json'
 
-export function readProducts(): Product[] {
-  const raw = fs.readFileSync(DB_PATH, 'utf-8')
-  return JSON.parse(raw)
+// Fallback: productos iniciales desde el JSON local (solo primer deploy)
+async function getInitialProducts(): Promise<Product[]> {
+  const { default: data } = await import('../data/products.json')
+  return data as Product[]
 }
 
-export function writeProducts(products: Product[]): void {
-  fs.writeFileSync(DB_PATH, JSON.stringify(products, null, 2), 'utf-8')
+export async function readProducts(): Promise<Product[]> {
+  try {
+    const blob = await head(BLOB_KEY).catch(() => null)
+    if (!blob) return getInitialProducts()
+
+    const url = await getDownloadUrl(BLOB_KEY)
+    const res = await fetch(url, { cache: 'no-store' })
+    if (!res.ok) return getInitialProducts()
+    return await res.json()
+  } catch {
+    return getInitialProducts()
+  }
+}
+
+export async function writeProducts(products: Product[]): Promise<void> {
+  await put(BLOB_KEY, JSON.stringify(products, null, 2), {
+    access: 'private',
+    contentType: 'application/json',
+    allowOverwrite: true,
+  })
 }
 
 export function slugify(name: string): string {
