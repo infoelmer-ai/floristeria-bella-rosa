@@ -1,8 +1,8 @@
 import { unstable_noStore as noStore } from 'next/cache'
-import { put, list, head } from '@vercel/blob'
+import { put, list } from '@vercel/blob'
 import type { Product } from './products'
 
-const BLOB_PATHNAME = 'products-v2.json'
+const BLOB_PATHNAME = 'products-public.json'
 
 async function getInitialProducts(): Promise<Product[]> {
   const { default: data } = await import('../data/products.json')
@@ -16,8 +16,7 @@ export async function readProducts(): Promise<Product[]> {
     if (!blobs.length) return getInitialProducts()
 
     const latest = blobs.sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime())[0]
-    const meta = await head(latest.url)
-    const res = await fetch(meta.downloadUrl, { cache: 'no-store' })
+    const res = await fetch(`${latest.url}?t=${Date.now()}`, { cache: 'no-store' })
     if (!res.ok) return getInitialProducts()
     return await res.json()
   } catch {
@@ -27,7 +26,7 @@ export async function readProducts(): Promise<Product[]> {
 
 export async function writeProducts(products: Product[]): Promise<void> {
   await put(BLOB_PATHNAME, JSON.stringify(products, null, 2), {
-    access: 'private',
+    access: 'public',
     contentType: 'application/json',
     allowOverwrite: true,
     addRandomSuffix: false,
