@@ -49,12 +49,19 @@ export default function AdminProductos() {
     setSaving(true)
     const url = editing ? `/api/admin/products/${editing.id}` : '/api/admin/products'
     const method = editing ? 'PUT' : 'POST'
-    await fetch(url, {
+    const res = await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
       body: JSON.stringify(form),
     })
-    await loadProducts(token)
+    if (res.ok) {
+      const saved: Product = await res.json()
+      if (editing) {
+        setProducts(prev => prev.map(p => p.id === saved.id ? saved : p))
+      } else {
+        setProducts(prev => [...prev, saved])
+      }
+    }
     setShowForm(false)
     setSaving(false)
     setMsg(editing ? 'Producto actualizado ✓' : 'Producto agregado ✓')
@@ -73,7 +80,7 @@ export default function AdminProductos() {
       setTimeout(() => setMsg(''), 4000)
       return
     }
-    await loadProducts(token)
+    setProducts(prev => prev.filter(p => p.id !== id))
     setMsg('Producto eliminado')
     setTimeout(() => setMsg(''), 3000)
   }
