@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { list } from '@vercel/blob'
+import { list, getDownloadUrl } from '@vercel/blob'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,12 +13,17 @@ export async function GET(req: NextRequest) {
       all.blobs.map(async b => {
         let preview: any = null
         try {
-          const r = await fetch(b.downloadUrl, { cache: 'no-store' })
+          const signed = await getDownloadUrl(b.url)
+          const r = await fetch(signed, { cache: 'no-store' })
           const text = await r.text()
-          const parsed = JSON.parse(text)
-          preview = Array.isArray(parsed) ? { count: parsed.length, names: parsed.map((p: any) => p.name) } : 'not-array'
+          try {
+            const parsed = JSON.parse(text)
+            preview = Array.isArray(parsed) ? { count: parsed.length, names: parsed.map((p: any) => p.name) } : 'not-array'
+          } catch {
+            preview = { rawSnippet: text.slice(0, 200), status: r.status }
+          }
         } catch (e) {
-          preview = 'parse-error'
+          preview = `fetch-error: ${String(e)}`
         }
         return {
           pathname: b.pathname,
