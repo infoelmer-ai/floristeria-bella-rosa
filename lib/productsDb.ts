@@ -29,6 +29,7 @@ export async function writeProducts(products: Product[]): Promise<void> {
     access: 'private',
     contentType: 'application/json',
     allowOverwrite: true,
+    addRandomSuffix: false,
   })
 }
 
