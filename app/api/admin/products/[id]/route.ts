@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
 import { readProducts, writeProducts } from '@/lib/productsDb'
 
 function checkAuth(req: NextRequest) {

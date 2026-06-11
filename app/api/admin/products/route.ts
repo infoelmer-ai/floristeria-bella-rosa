@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
 import { readProducts, writeProducts, slugify } from '@/lib/productsDb'
 import type { Product } from '@/lib/products'
 
@@ -9,7 +11,7 @@ function checkAuth(req: NextRequest) {
 export async function GET(req: NextRequest) {
   if (!checkAuth(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   const products = await readProducts()
-  return NextResponse.json(products)
+  return NextResponse.json(products, { headers: { 'Cache-Control': 'no-store' } })
 }
 
 export async function POST(req: NextRequest) {
