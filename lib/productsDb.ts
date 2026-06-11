@@ -1,9 +1,8 @@
-import { put, head, getDownloadUrl } from '@vercel/blob'
+import { put, list } from '@vercel/blob'
 import type { Product } from './products'
 
-const BLOB_KEY = 'products.json'
+const BLOB_PATHNAME = 'products.json'
 
-// Fallback: productos iniciales desde el JSON local (solo primer deploy)
 async function getInitialProducts(): Promise<Product[]> {
   const { default: data } = await import('../data/products.json')
   return data as Product[]
@@ -11,11 +10,10 @@ async function getInitialProducts(): Promise<Product[]> {
 
 export async function readProducts(): Promise<Product[]> {
   try {
-    const blob = await head(BLOB_KEY).catch(() => null)
-    if (!blob) return getInitialProducts()
+    const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 1 })
+    if (!blobs.length) return getInitialProducts()
 
-    const url = await getDownloadUrl(BLOB_KEY)
-    const res = await fetch(url, { cache: 'no-store' })
+    const res = await fetch(blobs[0].downloadUrl, { cache: 'no-store' })
     if (!res.ok) return getInitialProducts()
     return await res.json()
   } catch {
@@ -24,8 +22,8 @@ export async function readProducts(): Promise<Product[]> {
 }
 
 export async function writeProducts(products: Product[]): Promise<void> {
-  await put(BLOB_KEY, JSON.stringify(products, null, 2), {
-    access: 'private',
+  await put(BLOB_PATHNAME, JSON.stringify(products, null, 2), {
+    access: 'public',
     contentType: 'application/json',
     allowOverwrite: true,
   })

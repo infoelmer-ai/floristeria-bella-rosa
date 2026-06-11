@@ -28,7 +28,7 @@
     "name": "Rosas Blancas Elegantes",
     "description": "12 rosas blancas de elegancia pura. Perfectas para bodas y ocasiones especiales.",
     "price": 38.00,
-    "image": "https://images.unsplash.com/photo-1606041011872-596597976b25?w=600&q=80",
+    "image": "https://images.unsplash.com/photo-1454944338482-a69bb95894af?w=600&q=80",
     "category": "Rosas"
   },
   {
@@ -36,7 +36,7 @@
     "name": "Orquídea Phalaenopsis",
     "description": "Planta de orquídea en maceta elegante. Dura semanas con cuidado mínimo.",
     "price": 45.00,
-    "image": "https://images.unsplash.com/photo-1566408669374-5a6d5dca1ef5?w=600&q=80",
+    "image": "https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?w=600&q=80",
     "category": "Plantas"
   },
   {
@@ -52,7 +52,7 @@
     "name": "Arreglo de Cumpleaños",
     "description": "Arreglo festivo con rosas, gerberas y globo. Ideal para celebrar ese día especial.",
     "price": 40.00,
-    "image": "https://images.unsplash.com/photo-1487530811015-780ce0b0e8d5?w=600&q=80",
+    "image": "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=600&q=80",
     "category": "Ocasiones"
   },
   {
