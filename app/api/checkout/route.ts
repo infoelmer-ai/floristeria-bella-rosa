@@ -13,12 +13,26 @@ interface CheckoutItem {
   image: string
 }
 
+interface DeliveryData {
+  recipientName: string
+  recipientPhone: string
+  address: string
+  references: string
+  deliveryDate: string
+  deliveryTime: string
+  dedication: string
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { items }: { items: CheckoutItem[] } = await req.json()
+    const { items, delivery }: { items: CheckoutItem[]; delivery?: DeliveryData } = await req.json()
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: 'El carrito está vacío' }, { status: 400 })
+    }
+
+    if (!delivery || !delivery.recipientName || !delivery.recipientPhone || !delivery.address || !delivery.deliveryDate) {
+      return NextResponse.json({ error: 'Faltan datos de entrega' }, { status: 400 })
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
@@ -28,6 +42,7 @@ export async function POST(req: NextRequest) {
       mode: 'payment',
       locale: 'es',
       currency: 'usd',
+      phone_number_collection: { enabled: true },
       line_items: items.map(item => ({
         price_data: {
           currency: 'usd',
@@ -41,11 +56,30 @@ export async function POST(req: NextRequest) {
       })),
       success_url: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/cart`,
-      shipping_address_collection: {
-        allowed_countries: ['SV'],
+      metadata: {
+        recipient_name: delivery.recipientName,
+        recipient_phone: delivery.recipientPhone,
+        address: delivery.address,
+        references: delivery.references || '',
+        delivery_date: delivery.deliveryDate,
+        delivery_time: delivery.deliveryTime || 'Cualquier hora',
+        dedication: delivery.dedication || '',
+      },
+      payment_intent_data: {
+        metadata: {
+          recipient_name: delivery.recipientName,
+          recipient_phone: delivery.recipientPhone,
+          address: delivery.address,
+          references: delivery.references || '',
+          delivery_date: delivery.deliveryDate,
+          delivery_time: delivery.deliveryTime || 'Cualquier hora',
+          dedication: delivery.dedication || '',
+        },
       },
       custom_text: {
-        submit: { message: 'Nos pondremos en contacto contigo para coordinar la entrega.' },
+        submit: {
+          message: `Entregaremos el pedido a ${delivery.recipientName} el ${delivery.deliveryDate}. Nos pondremos en contacto para coordinar.`,
+        },
       },
     })
 
