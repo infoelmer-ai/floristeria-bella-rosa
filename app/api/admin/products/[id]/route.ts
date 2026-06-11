@@ -27,12 +27,17 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!checkAuth(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  const { id } = await params
-  const products = await readProducts()
-  const filtered = products.filter(p => p.id !== id)
-  if (filtered.length === products.length) {
-    return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 })
+  try {
+    const { id } = await params
+    const products = await readProducts()
+    const filtered = products.filter(p => p.id !== id)
+    if (filtered.length === products.length) {
+      return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 })
+    }
+    await writeProducts(filtered)
+    return NextResponse.json({ ok: true })
+  } catch (e) {
+    console.error('DELETE error:', e)
+    return NextResponse.json({ error: String(e) }, { status: 500 })
   }
-  await writeProducts(filtered)
-  return NextResponse.json({ ok: true })
 }
