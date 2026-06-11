@@ -16,7 +16,7 @@ export async function readProducts(): Promise<Product[]> {
     if (!blobs.length) return getInitialProducts()
 
     const latest = blobs.sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime())[0]
-    const res = await fetch(`${latest.url}?t=${Date.now()}`, { cache: 'no-store' })
+    const res = await fetch(latest.downloadUrl, { cache: 'no-store' })
     if (!res.ok) return getInitialProducts()
     return await res.json()
   } catch {
@@ -26,7 +26,7 @@ export async function readProducts(): Promise<Product[]> {
 
 export async function writeProducts(products: Product[]): Promise<void> {
   await put(BLOB_PATHNAME, JSON.stringify(products, null, 2), {
-    access: 'public',
+    access: 'private',
     contentType: 'application/json',
     allowOverwrite: true,
   })
