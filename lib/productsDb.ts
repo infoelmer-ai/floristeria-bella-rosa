@@ -16,7 +16,7 @@ export async function readProducts(): Promise<Product[]> {
     if (!blobs.length) return getInitialProducts()
 
     const latest = blobs.sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime())[0]
-    const res = await fetch(latest.url, { cache: 'no-store' })
+    const res = await fetch(`${latest.url}?t=${Date.now()}`, { cache: 'no-store' })
     if (!res.ok) return getInitialProducts()
     return await res.json()
   } catch {

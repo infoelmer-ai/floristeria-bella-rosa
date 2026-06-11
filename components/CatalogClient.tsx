@@ -1,13 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { Product } from '@/lib/products'
 import ProductCard from './ProductCard'
 
-export default function CatalogClient({ products }: { products: Product[] }) {
-  const cats = ['Todos', ...Array.from(new Set(products.map(p => p.category)))]
+export default function CatalogClient({ initialProducts }: { initialProducts: Product[] }) {
+  const [products, setProducts] = useState<Product[]>(initialProducts)
   const [active, setActive] = useState('Todos')
 
+  useEffect(() => {
+    fetch('/api/products')
+      .then(r => r.json())
+      .then(data => setProducts(data))
+      .catch(() => {})
+  }, [])
+
+  const cats = ['Todos', ...Array.from(new Set(products.map(p => p.category)))]
   const filtered = active === 'Todos' ? products : products.filter(p => p.category === active)
 
   return (

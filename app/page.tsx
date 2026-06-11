@@ -5,5 +5,5 @@ export const dynamic = 'force-dynamic'
 
 export default async function Home() {
   const products = await readProducts()
-  return <CatalogClient products={products} />
+  return <CatalogClient initialProducts={products} />
 }
