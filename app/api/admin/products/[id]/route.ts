@@ -5,11 +5,12 @@ function checkAuth(req: NextRequest) {
   return req.headers.get('x-admin-token') === process.env.ADMIN_PASSWORD
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!checkAuth(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const { id } = await params
   const body = await req.json()
   const products = readProducts()
-  const idx = products.findIndex(p => p.id === params.id)
+  const idx = products.findIndex(p => p.id === id)
   if (idx === -1) return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 })
 
   products[idx] = {
@@ -24,10 +25,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   return NextResponse.json(products[idx])
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!checkAuth(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const { id } = await params
   const products = readProducts()
-  const filtered = products.filter(p => p.id !== params.id)
+  const filtered = products.filter(p => p.id !== id)
   if (filtered.length === products.length) {
     return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 })
   }
